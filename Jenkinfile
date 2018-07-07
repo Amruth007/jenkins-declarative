@@ -28,6 +28,30 @@ pipeline{
 
             }
         }
+        
+        stage('Example') {
+            input {
+                message "Should we continue?"
+                ok "Yes, we should."
+                submitter "rajesh"
+                parameters {
+                    string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
+                }
+            }
+            steps {
+                echo "Hello, ${PERSON}, nice to meet you."
+            }
+        }
+    
+        
+        stage('Inovke ansible playbook'){
+            steps{
+                git 'https://github.com/rjonala/anisble-roles.git'
+                ansiblePlaybook credentialsId: 'b0830db4-e6aa-400c-8faf-202d1b104257', extras: '-e host=QA', inventory: 'environments/QA/inventory', playbook: 'main.yml', vaultCredentialsId: 'ansible-vault'                
+
+            }
+        }
     }
     
 }
+
